@@ -4,6 +4,7 @@ import { Providers } from "./providers";
 import Navbar from "@/components/site/Navbar";
 import Footer from "@/components/site/Footer";
 import Grain from "@/components/site/Grain";
+import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 
 export const metadata = {
   title: "Standoutdev — We craft award-winning digital products",
@@ -58,10 +59,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         <Providers>
-          <Grain />
-          <Navbar />
-          <main className="relative z-10">{children}</main>
-          <Footer />
+          <SmoothScrollProvider>
+            <Grain />
+            <Navbar />
+            <main className="relative z-10">{children}</main>
+            <Footer />
+          </SmoothScrollProvider>
         </Providers>
       </body>
     </html>
