@@ -1,3 +1,4 @@
+// components/site/Logo3DScene.jsx
 'use client'
 import { Suspense, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
@@ -10,7 +11,6 @@ function Logo3D() {
   const { scene } = useGLTF('/logo.glb')
   const ref = useRef(null)
 
-  // Keep original materials — just enable shadows
   scene.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = true
@@ -26,7 +26,6 @@ function Logo3D() {
 
   return (
     <Float speed={2} rotationIntensity={0.3} floatIntensity={0.6}>
-      {/* Lowered on Y axis */}
       <group ref={ref} scale={1.5} position={[0, -0.8, 0]}>
         <primitive object={scene} />
       </group>
@@ -47,7 +46,6 @@ function OrbitRings() {
   })
 
   return (
-    // Rings also moved down to sit under the logo
     <group position={[0, -2.5, 0]} rotation={[Math.PI / 2, 0, 0]}>
       <mesh ref={ring1}>
         <ringGeometry args={[2.2, 2.22, 128]} />
@@ -79,10 +77,8 @@ export default function Logo3DScene() {
         <pointLight position={[-5, -3, -5]} intensity={1.5} color="#3b82f6" />
         <pointLight position={[5, -2, 3]} intensity={1.2} color="#6366f1" />
         <spotLight position={[0, 8, 0]} intensity={1.5} angle={0.5} penumbra={1} color="#ffffff" />
-
         <Logo3D />
         <OrbitRings />
-
         <ContactShadows
           position={[0, -2.8, 0]}
           opacity={0.6}
@@ -91,7 +87,6 @@ export default function Logo3DScene() {
           far={4}
           color="#1e3a8a"
         />
-
         <Environment preset="city" />
       </Suspense>
     </Canvas>

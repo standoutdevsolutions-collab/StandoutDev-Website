@@ -1,3 +1,5 @@
+// app/layout.js
+
 import "./globals.css";
 import Script from "next/script";
 import { Providers } from "./providers";
@@ -5,22 +7,21 @@ import Navbar from "@/components/site/Navbar";
 import Footer from "@/components/site/Footer";
 import Grain from "@/components/site/Grain";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import CustomCursor from "@/components/site/CustomCursor";
 
 export const metadata = {
-  title: "Standoutdev — We craft award-winning digital products",
+  title: "StandoutDev — We craft award-winning digital products",
   description:
-    "Standoutdev is a design & engineering studio building cinematic web experiences, brands, and products that stand out.",
+    "StandoutDev is a design & engineering studio building cinematic web experiences, brands, and products that stand out.",
   verification: {
     google: "N7NHJwk-5JPXvE4ZecMQ3W1uKQmAtO-XJxhD2k7iYEc",
   },
 };
 
-// SEO Metadata
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <head>
-        {/* Google Tag Manager */}
         <Script
           id="google-tag-manager"
           strategy="beforeInteractive"
@@ -29,7 +30,6 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-KWRC324Z');`}</Script>
-        {/* End Google Tag Manager */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -48,7 +48,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
       </head>
       <body className="bg-[#0a0e27] text-white antialiased overflow-x-hidden">
-        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-KWRC324Z"
@@ -57,10 +56,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
-        {/* End Google Tag Manager (noscript) */}
         <Providers>
           <SmoothScrollProvider>
             <Grain />
+            <CustomCursor />
             <Navbar />
             <main className="relative z-10">{children}</main>
             <Footer />
