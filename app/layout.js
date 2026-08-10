@@ -14,7 +14,7 @@ export const metadata = {
   description:
     "StandoutDev is a design & engineering studio building cinematic web experiences, brands, and products that stand out.",
   verification: {
-    google: "N7NHJwk-5JPXvE4ZecMQ3W1uKQmAtO-XJxhD2k7iYEc",
+    google: "VeFhhYNtV58B8z-8tQ8fFfDoHlairJsC8GoiBBmv-F4",
   },
 };
 
@@ -22,14 +22,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <head>
-        <Script
-          id="google-tag-manager"
-          strategy="beforeInteractive"
-        >{`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        {/* Google Tag Manager */}
+        <Script id="google-tag-manager" strategy="afterInteractive">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KWRC324Z');`}</Script>
+})(window,document,'script','dataLayer','GTM-TP3P4VLV');`}
+        </Script>
+        {/* End Google Tag Manager */}
+
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -48,14 +50,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
       </head>
       <body className="bg-[#0a0e27] text-white antialiased overflow-x-hidden">
+        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-KWRC324Z"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-TP3P4VLV"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+        {/* End Google Tag Manager (noscript) */}
+
         <Providers>
           <SmoothScrollProvider>
             <Grain />
