@@ -13,7 +13,6 @@ const links = [
   { href: '/services', label: 'Services' },
   { href: '/work', label: 'Work' },
   { href: '/about', label: 'About Us' },
-  { href: '/blog', label: 'Blog' },
 ]
 
 export default function Navbar() {
