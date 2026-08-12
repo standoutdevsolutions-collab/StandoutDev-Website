@@ -62,7 +62,7 @@ const portfolioWork = [
     colorHex: '#3b82f6',
     colorRgb: '59,130,246',
     url: 'https://siddhanath-physics.vercel.app/',
-    desc: 'An interactive education platform making physics accessible. Enrolled 150+ students within months.',
+    desc: 'An interactive education platform making physics accessible and engaging.',
     thumbnail: '/phy1.png',
     results: [{ v:'150+', l:'Students' },{ v:'95%', l:'Satisfaction' },{ v:'<1s', l:'Load' }],
     services: ['UI/UX','Development','Branding'],
@@ -78,7 +78,7 @@ const portfolioWork = [
     colorHex: '#8b5cf6',
     colorRgb: '139,92,246',
     url: 'https://digitaldeveloperss.com/',
-    desc: 'A bold agency website with cinematic scroll animations and a perfect Lighthouse score.',
+    desc: 'A bold agency website with cinematic scroll animations and perfect performance.',
     thumbnail: '/dg.png',
     results: [{ v:'5×', l:'Leads' },{ v:'40%', l:'Conversion' },{ v:'100', l:'Perf.' }],
     services: ['Brand Strategy','Web Design','Motion'],
@@ -157,138 +157,106 @@ const FAQItem = memo(function FAQItem({ q, a, i, openIndex, setOpenIndex }) {
 });
 
 /* ============================================
-   FEATURED PROJECT CARD — Compact + Immersive
+   GRID PROJECT CARD — Compact Grid Version
 ============================================ */
-const FeaturedProject = memo(function FeaturedProject({ p, i }) {
+const GridProjectCard = memo(function GridProjectCard({ p, i }) {
   const [hovered, setHovered] = useState(false);
   const [imgErr, setImgErr]   = useState(false);
-  const ref     = useRef(null);
-  const cardRef = useRef(null);
-  const inView  = useInView(ref, { once: true, margin: '-80px' });
-
-  // Subtle 3-D tilt
-  const mouseX  = useMotionValue(0);
-  const mouseY  = useMotionValue(0);
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [2, -2]), { stiffness: 140, damping: 22 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-2, 2]), { stiffness: 140, damping: 22 });
-
-  const onMove = useCallback((e) => {
-    if (!cardRef.current) return;
-    const r = cardRef.current.getBoundingClientRect();
-    mouseX.set((e.clientX - r.left) / r.width  - 0.5);
-    mouseY.set((e.clientY - r.top)  / r.height - 0.5);
-  }, [mouseX, mouseY]);
-
-  const onLeave = useCallback(() => {
-    setHovered(false);
-    mouseX.set(0);
-    mouseY.set(0);
-  }, [mouseX, mouseY]);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 60 }}
+      initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.85, delay: i * 0.12, ease: E }}
-      style={{ marginBottom: 'clamp(32px,5vw,56px)', perspective: 1200 }}
+      transition={{ duration: 0.7, delay: i * 0.1, ease: E }}
+      layout
     >
-      <motion.div
-        ref={cardRef}
+      <div
         onMouseEnter={() => setHovered(true)}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
+        onMouseLeave={() => setHovered(false)}
         style={{
-          rotateX: hovered ? rotateX : 0,
-          rotateY: hovered ? rotateY : 0,
-          transformStyle: 'preserve-3d',
-          borderRadius: 20,
+          borderRadius: 16,
           overflow: 'hidden',
           position: 'relative',
-          border: `1px solid ${hovered ? `rgba(${p.colorRgb},0.18)` : 'rgba(255,255,255,0.06)'}`,
-          background: 'rgba(255,255,255,0.015)',
-          transition: 'box-shadow 0.7s cubic-bezier(0.22,1,0.36,1), border-color 0.5s ease',
+          border: `1px solid ${hovered ? `rgba(${p.colorRgb},0.2)` : 'rgba(255,255,255,0.06)'}`,
+          background: hovered
+            ? `linear-gradient(135deg, rgba(${p.colorRgb},0.04) 0%, rgba(255,255,255,0.02) 100%)`
+            : 'rgba(255,255,255,0.015)',
+          transition: 'all 0.5s cubic-bezier(0.22,1,0.36,1)',
           boxShadow: hovered
-            ? `0 32px 80px -16px rgba(${p.colorRgb},0.22), 0 0 0 1px rgba(${p.colorRgb},0.08)`
-            : 'none',
+            ? `0 20px 60px -12px rgba(${p.colorRgb},0.18), 0 0 0 1px rgba(${p.colorRgb},0.06)`
+            : '0 2px 12px rgba(0,0,0,0.12)',
+          transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        {/* Ambient glow */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
-          background: `radial-gradient(ellipse at 50% 0%, rgba(${p.colorRgb},${hovered ? 0.07 : 0.025}) 0%, transparent 65%)`,
-          transition: 'background 0.8s ease',
-        }} />
-
         {/* ── IMAGE AREA ─────────────────────────────── */}
-        {/* Fixed height instead of padding-top trick */}
         <div
           style={{
             position: 'relative',
             width: '100%',
-            height: 'clamp(220px, 30vw, 380px)',   // ← compact fixed height
+            aspectRatio: '16 / 10',
             cursor: 'pointer',
             overflow: 'hidden',
+            flexShrink: 0,
           }}
           onClick={() => window.open(p.url, '_blank')}
         >
-          {/* Bottom fade so image bleeds into info panel */}
+          {/* Bottom gradient fade */}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none',
-            background: 'linear-gradient(180deg, rgba(2,6,23,0) 30%, rgba(2,6,23,0.92) 100%)',
+            background: 'linear-gradient(180deg, rgba(2,6,23,0) 50%, rgba(2,6,23,0.95) 100%)',
           }} />
 
-          {/* Subtle colour tint */}
+          {/* Colour tint */}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-            background: `linear-gradient(135deg, rgba(${p.colorRgb},0.07) 0%, transparent 55%)`,
+            background: `linear-gradient(135deg, rgba(${p.colorRgb},0.08) 0%, transparent 60%)`,
           }} />
 
-          {/* Browser chrome */}
+          {/* Browser chrome mini */}
           <div style={{
             position: 'absolute',
-            top: 16, left: 16, right: 16, bottom: 0,
+            top: 10, left: 10, right: 10, bottom: 0,
             zIndex: 3,
-            borderRadius: '12px 12px 0 0',
+            borderRadius: '10px 10px 0 0',
             overflow: 'hidden',
-            border: '1px solid rgba(255,255,255,0.07)',
+            border: '1px solid rgba(255,255,255,0.06)',
             borderBottom: 'none',
-            background: 'rgba(5,10,28,0.55)',
-            backdropFilter: 'blur(10px)',
-            transform: hovered ? 'translateY(-6px) scale(1.008)' : 'translateY(0) scale(1)',
-            transition: 'transform 0.7s cubic-bezier(0.22,1,0.36,1)',
+            background: 'rgba(5,10,28,0.6)',
+            backdropFilter: 'blur(8px)',
+            transform: hovered ? 'translateY(-4px) scale(1.005)' : 'translateY(0) scale(1)',
+            transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)',
             boxShadow: hovered
-              ? `0 20px 60px -10px rgba(${p.colorRgb},0.28), 0 6px 24px rgba(0,0,0,0.5)`
-              : '0 6px 24px rgba(0,0,0,0.28)',
+              ? `0 12px 40px -8px rgba(${p.colorRgb},0.2)`
+              : '0 4px 16px rgba(0,0,0,0.2)',
           }}>
             {/* Chrome bar */}
             <div style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '8px 12px',
-              background: 'rgba(0,0,0,0.55)',
-              borderBottom: '1px solid rgba(255,255,255,0.05)',
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '6px 10px',
+              background: 'rgba(0,0,0,0.5)',
+              borderBottom: '1px solid rgba(255,255,255,0.04)',
             }}>
-              {/* Traffic lights */}
-              <div style={{ display: 'flex', gap: 5 }}>
-                {['rgba(255,95,86,0.65)','rgba(255,189,46,0.65)','rgba(39,201,63,0.65)'].map((c, k) => (
-                  <span key={k} style={{
-                    width: 9, height: 9, borderRadius: '50%', background: c,
-                    transform: hovered ? 'scale(1.1)' : 'scale(1)',
-                    transition: 'transform 0.3s ease',
-                  }} />
+              <div style={{ display: 'flex', gap: 4 }}>
+                {['rgba(255,95,86,0.6)','rgba(255,189,46,0.6)','rgba(39,201,63,0.6)'].map((c, k) => (
+                  <span key={k} style={{ width: 7, height: 7, borderRadius: '50%', background: c }} />
                 ))}
               </div>
-              {/* URL pill */}
               <div style={{
-                flex: 1, display: 'flex', alignItems: 'center', gap: 5,
-                padding: '4px 10px', borderRadius: 6,
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.05)',
-                maxWidth: 340, margin: '0 auto',
+                flex: 1, display: 'flex', alignItems: 'center', gap: 4,
+                padding: '3px 8px', borderRadius: 5,
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.04)',
+                maxWidth: 200, margin: '0 auto',
               }}>
-                <Globe className="h-2 w-2 flex-shrink-0" style={{ color: `rgba(${p.colorRgb},0.6)` }} />
+                <Globe className="h-2 w-2 flex-shrink-0" style={{ color: `rgba(${p.colorRgb},0.5)` }} />
                 <span style={{
-                  fontSize: 10, color: 'rgba(255,255,255,0.28)',
+                  fontSize: 8, color: 'rgba(255,255,255,0.22)',
                   fontFamily: 'monospace',
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                 }}>{p.url.replace('https://', '')}</span>
@@ -296,11 +264,11 @@ const FeaturedProject = memo(function FeaturedProject({ p, i }) {
             </div>
 
             {/* Screenshot */}
-            <div style={{ position: 'relative', width: '100%', height: 'calc(100% - 34px)' }}>
+            <div style={{ position: 'relative', width: '100%', height: 'calc(100% - 28px)' }}>
               {imgErr ? (
                 <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', opacity:0.35 }}>
-                  <Layers className="h-10 w-10" />
-                  <p style={{ marginTop:6, fontWeight:600, fontSize:13 }}>{p.title}</p>
+                  <Layers className="h-8 w-8" />
+                  <p style={{ marginTop:4, fontWeight:600, fontSize:11 }}>{p.title}</p>
                 </div>
               ) : (
                 <Image
@@ -308,131 +276,135 @@ const FeaturedProject = memo(function FeaturedProject({ p, i }) {
                   style={{
                     objectFit: 'cover',
                     objectPosition: 'top center',
-                    transform: hovered ? 'scale(1.03) translateY(-2%)' : 'scale(1) translateY(0)',
-                    transition: 'transform 1.4s cubic-bezier(0.22,1,0.36,1)',
+                    transform: hovered ? 'scale(1.04) translateY(-2%)' : 'scale(1) translateY(0)',
+                    transition: 'transform 1.2s cubic-bezier(0.22,1,0.36,1)',
                   }}
                   onError={() => setImgErr(true)}
-                  sizes="(max-width:768px) 100vw, 80vw"
-                  quality={90}
+                  sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
+                  quality={85}
                   priority={i === 0}
                 />
               )}
             </div>
           </div>
 
-          {/* Hover overlay CTA */}
+          {/* Hover overlay */}
           <motion.div
             style={{
               position: 'absolute', inset: 0, zIndex: 5,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'rgba(2,6,23,0.55)', backdropFilter: 'blur(5px)',
+              background: 'rgba(2,6,23,0.5)', backdropFilter: 'blur(4px)',
             }}
             initial={false}
             animate={{ opacity: hovered ? 1 : 0 }}
-            transition={{ duration: 0.35 }}
+            transition={{ duration: 0.3 }}
           >
             <motion.div
               initial={false}
-              animate={{ scale: hovered ? 1 : 0.82, y: hovered ? 0 : 12 }}
-              transition={{ duration: 0.45, ease: E }}
+              animate={{ scale: hovered ? 1 : 0.85, y: hovered ? 0 : 8 }}
+              transition={{ duration: 0.4, ease: E }}
               style={{
-                display: 'flex', alignItems: 'center', gap: 8,
-                padding: '11px 22px', borderRadius: 100,
-                background: `linear-gradient(135deg, rgba(${p.colorRgb},0.92), rgba(${p.colorRgb},0.6))`,
-                border: '1px solid rgba(255,255,255,0.18)',
-                color: '#fff', fontSize: 13, fontWeight: 700,
-                boxShadow: `0 6px 24px rgba(${p.colorRgb},0.4)`,
+                display: 'flex', alignItems: 'center', gap: 6,
+                padding: '9px 18px', borderRadius: 100,
+                background: `linear-gradient(135deg, rgba(${p.colorRgb},0.9), rgba(${p.colorRgb},0.6))`,
+                border: '1px solid rgba(255,255,255,0.15)',
+                color: '#fff', fontSize: 11, fontWeight: 700,
+                boxShadow: `0 4px 18px rgba(${p.colorRgb},0.35)`,
               }}
             >
-              <ExternalLink className="h-4 w-4" /> Visit Live Site
+              <ExternalLink className="h-3.5 w-3.5" /> Visit Site
             </motion.div>
           </motion.div>
+
+          {/* Year badge */}
+          <div style={{
+            position: 'absolute', top: 16, right: 16, zIndex: 6,
+            fontSize: 9, padding: '3px 8px', borderRadius: 100,
+            background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            color: 'rgba(255,255,255,0.4)', fontFamily: 'monospace', fontWeight: 600,
+          }}>{p.year}</div>
         </div>
 
         {/* ── INFO PANEL ─────────────────────────────── */}
         <div style={{
           position: 'relative', zIndex: 4,
-          padding: 'clamp(16px,2.5vw,28px)',
-          paddingTop: 'clamp(14px,2vw,20px)',
+          padding: 'clamp(14px,2vw,20px)',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
         }}>
-          {/* Meta row */}
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10, flexWrap:'wrap', gap:6 }}>
-            <div style={{ display:'flex', alignItems:'center', gap:6 }}>
-              <span style={{ fontSize:9, textTransform:'uppercase', letterSpacing:'0.14em', color:`rgba(${p.colorRgb},0.7)`, fontWeight:700 }}>{p.tag}</span>
-              <span style={{ width:2, height:2, borderRadius:'50%', background:'rgba(255,255,255,0.2)' }} />
-              <span style={{ fontSize:9, color:'rgba(255,255,255,0.22)', fontFamily:'monospace' }}>{p.year}</span>
-            </div>
-            <div style={{ display:'flex', gap:4 }}>
+          {/* Tag + Tools */}
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:8, gap:6 }}>
+            <span style={{ fontSize:9, textTransform:'uppercase', letterSpacing:'0.12em', color:`rgba(${p.colorRgb},0.7)`, fontWeight:700 }}>{p.tag}</span>
+            <div style={{ display:'flex', gap:3 }}>
               {p.tools.map(t => (
-                <span key={t} style={{ fontSize:9, padding:'2px 8px', borderRadius:100, background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)', color:'rgba(255,255,255,0.38)', fontWeight:500 }}>{t}</span>
+                <span key={t} style={{ fontSize:8, padding:'2px 6px', borderRadius:100, background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.06)', color:'rgba(255,255,255,0.35)', fontWeight:500 }}>{t}</span>
               ))}
             </div>
           </div>
 
           {/* Title */}
-          <h3 style={{ fontSize:'clamp(1.3rem,3vw,2rem)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, margin:'0 0 8px', ...wT }}>{p.title}</h3>
+          <h3 style={{ fontSize:'clamp(1.1rem,2.2vw,1.4rem)', fontWeight:800, letterSpacing:'-0.02em', lineHeight:1.15, margin:'0 0 6px', ...wT }}>{p.title}</h3>
 
           {/* Desc */}
-          <p style={{ ...BD, marginBottom:16, maxWidth:540, fontSize:13 }}>{p.desc}</p>
+          <p style={{ color:'rgba(255,255,255,0.42)', lineHeight:1.6, fontSize:12, marginBottom:14, flex:1 }}>{p.desc}</p>
 
-          {/* Results + actions in one row */}
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:12 }}>
-            {/* Metric pills */}
-            <div style={{ display:'flex', gap:8 }}>
-              {p.results.map(r => (
-                <div key={r.l} style={{
-                  padding: '8px 12px', borderRadius: 12,
-                  background: `linear-gradient(135deg, rgba(${p.colorRgb},0.07) 0%, rgba(${p.colorRgb},0.02) 100%)`,
-                  border: `1px solid rgba(${p.colorRgb},0.1)`,
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 52,
-                }}>
-                  <span style={{
-                    fontSize: 'clamp(0.85rem,1.8vw,1.1rem)', fontWeight: 900, lineHeight: 1,
-                    background: `linear-gradient(135deg, rgba(${p.colorRgb},1) 0%, #fff 100%)`,
-                    WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                  }}>{r.v}</span>
-                  <span style={{ fontSize:8, color:'rgba(255,255,255,0.28)', marginTop:3, textTransform:'uppercase', letterSpacing:'0.08em', fontWeight:600 }}>{r.l}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Buttons */}
-            <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
-              <Link href="/work" style={{
-                display:'inline-flex', alignItems:'center', gap:5,
-                padding:'8px 16px', borderRadius:100, fontSize:12, fontWeight:600,
-                background:`linear-gradient(135deg, rgba(${p.colorRgb},0.85), rgba(${p.colorRgb},0.55))`,
-                color:'#fff', textDecoration:'none',
-                boxShadow:`0 3px 14px rgba(${p.colorRgb},0.22)`,
-                transition:'all 0.4s cubic-bezier(0.22,1,0.36,1)',
+          {/* Results row */}
+          <div style={{ display:'flex', gap:6, marginBottom:14 }}>
+            {p.results.map(r => (
+              <div key={r.l} style={{
+                padding: '6px 10px', borderRadius: 10, flex: 1,
+                background: `linear-gradient(135deg, rgba(${p.colorRgb},0.06) 0%, rgba(${p.colorRgb},0.02) 100%)`,
+                border: `1px solid rgba(${p.colorRgb},0.08)`,
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
               }}>
-                Case Study <ArrowUpRight className="h-3 w-3" />
-              </Link>
-              <a href={p.url} target="_blank" rel="noopener noreferrer" style={{
-                display:'inline-flex', alignItems:'center', gap:5,
-                padding:'8px 14px', borderRadius:100, fontSize:12, fontWeight:600,
-                background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)',
-                color:'rgba(255,255,255,0.55)', textDecoration:'none',
-                transition:'all 0.4s cubic-bezier(0.22,1,0.36,1)',
-              }} className="hover:bg-white/[0.08] hover:text-white/90">
-                <ExternalLink className="h-3 w-3" /> Live
-              </a>
-            </div>
+                <span style={{
+                  fontSize: 'clamp(0.8rem,1.4vw,0.95rem)', fontWeight: 900, lineHeight: 1,
+                  background: `linear-gradient(135deg, rgba(${p.colorRgb},1) 0%, #fff 100%)`,
+                  WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                }}>{r.v}</span>
+                <span style={{ fontSize:7, color:'rgba(255,255,255,0.25)', marginTop:2, textTransform:'uppercase', letterSpacing:'0.06em', fontWeight:600 }}>{r.l}</span>
+              </div>
+            ))}
           </div>
 
-          {/* Service tags — subtle bottom strip */}
-          <div style={{ display:'flex', flexWrap:'wrap', gap:5, marginTop:12, paddingTop:12, borderTop:'1px solid rgba(255,255,255,0.05)' }}>
+          {/* Actions */}
+          <div style={{ display:'flex', gap:6 }}>
+            <Link href="/work" style={{
+              display:'inline-flex', alignItems:'center', gap:4, flex:1, justifyContent:'center',
+              padding:'8px 14px', borderRadius:100, fontSize:11, fontWeight:600,
+              background:`linear-gradient(135deg, rgba(${p.colorRgb},0.85), rgba(${p.colorRgb},0.55))`,
+              color:'#fff', textDecoration:'none',
+              boxShadow:`0 3px 12px rgba(${p.colorRgb},0.2)`,
+              transition:'all 0.4s cubic-bezier(0.22,1,0.36,1)',
+            }}>
+              Case Study <ArrowUpRight className="h-3 w-3" />
+            </Link>
+            <a href={p.url} target="_blank" rel="noopener noreferrer" style={{
+              display:'inline-flex', alignItems:'center', gap:4,
+              padding:'8px 12px', borderRadius:100, fontSize:11, fontWeight:600,
+              background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)',
+              color:'rgba(255,255,255,0.5)', textDecoration:'none',
+              transition:'all 0.4s cubic-bezier(0.22,1,0.36,1)',
+            }} className="hover:bg-white/[0.08] hover:text-white/90">
+              <ExternalLink className="h-3 w-3" /> Live
+            </a>
+          </div>
+
+          {/* Service tags */}
+          <div style={{ display:'flex', flexWrap:'wrap', gap:4, marginTop:10, paddingTop:10, borderTop:'1px solid rgba(255,255,255,0.04)' }}>
             {p.services.map(s => (
               <span key={s} style={{
-                fontSize:10, padding:'3px 10px', borderRadius:100,
-                background:`rgba(${p.colorRgb},0.05)`,
-                border:`1px solid rgba(${p.colorRgb},0.1)`,
-                color:`rgba(${p.colorRgb},0.7)`, fontWeight:500,
+                fontSize:9, padding:'2px 8px', borderRadius:100,
+                background:`rgba(${p.colorRgb},0.04)`,
+                border:`1px solid rgba(${p.colorRgb},0.08)`,
+                color:`rgba(${p.colorRgb},0.6)`, fontWeight:500,
               }}>{s}</span>
             ))}
           </div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 });
@@ -710,7 +682,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════ PORTFOLIO ══════════ */}
+      {/* ══════════ PORTFOLIO — GRID LAYOUT ══════════ */}
       <section style={{
         position:'relative',
         padding:'clamp(64px,8vw,112px) 0',
@@ -744,7 +716,7 @@ export default function Home() {
 
           {/* Filters */}
           <motion.div initial={{opacity:0,y:12}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.6,delay:0.2,ease:E}}
-            style={{display:'flex',flexWrap:'wrap',gap:6,marginBottom:'clamp(32px,5vw,56px)',padding:'5px',borderRadius:100,background:'rgba(255,255,255,0.02)',border:'1px solid rgba(255,255,255,0.05)',width:'fit-content'}}>
+            style={{display:'flex',flexWrap:'wrap',gap:6,marginBottom:'clamp(28px,4vw,44px)',padding:'5px',borderRadius:100,background:'rgba(255,255,255,0.02)',border:'1px solid rgba(255,255,255,0.05)',width:'fit-content'}}>
             {portfolioFilters.map(f=>(
               <button key={f} onClick={()=>setActiveFilter(f)} style={{
                 borderRadius:100,padding:'7px 16px',fontSize:11,fontWeight:600,cursor:'pointer',
@@ -758,9 +730,16 @@ export default function Home() {
             ))}
           </motion.div>
 
-          {/* Cards */}
+          {/* ★ GRID CARDS ★ */}
           <AnimatePresence mode="popLayout">
-            {filteredWork.map((w,i)=><FeaturedProject key={w.id} p={w} i={i} />)}
+            <motion.div
+              layout
+              className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
+            >
+              {filteredWork.map((w, i) => (
+                <GridProjectCard key={w.id} p={w} i={i} />
+              ))}
+            </motion.div>
           </AnimatePresence>
 
           {filteredWork.length===0 && (
@@ -773,7 +752,7 @@ export default function Home() {
 
           {/* Bottom CTA */}
           <motion.div initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.7,ease:E}}
-            style={{textAlign:'center',marginTop:'clamp(8px,3vw,24px)',padding:'clamp(24px,4vw,44px)',borderRadius:20,border:'1px solid rgba(255,255,255,0.05)',background:'linear-gradient(135deg,rgba(59,130,246,0.04) 0%,rgba(6,182,212,0.02) 100%)'}}>
+            style={{textAlign:'center',marginTop:'clamp(28px,4vw,48px)',padding:'clamp(24px,4vw,44px)',borderRadius:20,border:'1px solid rgba(255,255,255,0.05)',background:'linear-gradient(135deg,rgba(59,130,246,0.04) 0%,rgba(6,182,212,0.02) 100%)'}}>
             <p style={{fontSize:'clamp(1rem,1.8vw,1.3rem)',fontWeight:700,color:'rgba(255,255,255,0.85)',marginBottom:6}}>Have a project in mind?</p>
             <p style={{...BD,marginBottom:20,maxWidth:380,marginLeft:'auto',marginRight:'auto',fontSize:13}}>Let&apos;s build something that stands out together.</p>
             <Link href="/contact" style={{display:'inline-flex',alignItems:'center',gap:7,borderRadius:100,padding:'12px 24px',fontWeight:600,fontSize:13,background:'linear-gradient(135deg,#2563eb,#0891b2)',color:'#fff',textDecoration:'none',boxShadow:'0 4px 20px rgba(59,130,246,0.28)',transition:'all 0.4s cubic-bezier(0.22,1,0.36,1)'}}>
